@@ -29,10 +29,14 @@ public class Length {
         return unit.getConversionFactor()*value;
     }
 
+    public Boolean compare(Length that) {
+    	return Double.compare(this.toBaseUnit(), that.toBaseUnit())==0;
+    }
+    
     @Override
     public boolean equals(Object obj) {
 
-        // Reflexive
+        // reflexive
         if (this == obj) return true;
 
         // null + Type check
