@@ -6,6 +6,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
+import com.QuantityMeasurementApp.Feet;
+
 /**
  * Unit test for simple App.
  */
@@ -14,8 +16,8 @@ public class AppTest
 {
 	@Test
     void testEquality_SameValue() {
-        Feet feet1 = new Feet(1.0);
-        Feet feet2 = new Feet(1.0);
+        QuantityMeasurementApp.Feet feet1 = new Feet(1.0);
+        QuantityMeasurementApp.Feet feet2 = new Feet(1.0);
 
         assertTrue(feet1.equals(feet2), 
                 "1.0 ft should be equal to 1.0 ft");
@@ -23,8 +25,8 @@ public class AppTest
 
     @Test
     void testEquality_DifferentValue() {
-        Feet feet1 = new Feet(1.0);
-        Feet feet2 = new Feet(2.0);
+    	QuantityMeasurementApp.Feet feet1 = new Feet(1.0);
+    	QuantityMeasurementApp.Feet feet2 = new Feet(2.0);
 
         assertEquals(feet1.equals(feet2), 
                 "1.0 ft should not be equal to 2.0 ft");
@@ -32,7 +34,7 @@ public class AppTest
 
     @Test
     void testEquality_NullComparison() {
-        Feet feet = new Feet(1.0);
+    	QuantityMeasurementApp.Feet feet = new Feet(1.0);
 
         assertEquals(feet.equals(null), 
                 "Feet value should not be equal to null");
@@ -40,7 +42,7 @@ public class AppTest
 
     @Test
     void testEquality_NonNumericInput() {
-        Feet feet = new Feet(1.0);
+    	QuantityMeasurementApp.Feet feet = new Feet(1.0);
         String nonNumeric = "1.0";
 
         assertFalse(feet.equals(nonNumeric), 
@@ -49,7 +51,7 @@ public class AppTest
 
     @Test
     void testEquality_SameReference() {
-        Feet feet = new Feet(1.0);
+    	QuantityMeasurementApp.Feet feet = new Feet(1.0);
 
         assertTrue(feet.equals(feet), 
                 "Feet value should be equal to itself (reflexive property)");
