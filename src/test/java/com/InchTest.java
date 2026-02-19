@@ -5,13 +5,15 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
+import com.QuantityMeasurementApp.Inches;
+
 public class InchTest {
 
 		
 	@Test
     void testEquality_SameValue() {
-        Inches inch1 = new Inches(1.0);
-        Inches inch2 = new Inches(1.0);
+        QuantityMeasurementApp.Inches inch1 = new Inches(1.0);
+        QuantityMeasurementApp.Inches inch2 = new Inches(1.0);
 
         assertTrue(inch1.equals(inch2),
                 "1.0 inch should be equal to 1.0 inch");
@@ -68,4 +70,8 @@ public class InchTest {
         assertFalse(inch.compareInches(1.0, 2.0),
                 "compareInches should return false for different values");
     }
+    
+    //static mehtods check 
+    
+    
 }
