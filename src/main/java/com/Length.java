@@ -33,6 +33,23 @@ public class Length {
     	return Double.compare(this.toBaseUnit(), that.toBaseUnit())==0;
     }
     
+    public Length convertTo(LengthUnit targetUnit) {
+
+        if (targetUnit == null) {
+            throw new IllegalArgumentException("Target unit cannot be null.");
+        }
+
+        double baseValue = toBaseUnit();
+
+        double convertedValue = baseValue / targetUnit.getConversionFactor();
+
+        return new Length(round(convertedValue), targetUnit);
+    }
+    
+    private double round(double value) {
+        return Math.round(value * 100.0) / 100.0;
+    }
+    
     @Override
     public boolean equals(Object obj) {
 
