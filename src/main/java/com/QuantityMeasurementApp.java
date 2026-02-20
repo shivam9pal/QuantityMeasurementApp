@@ -42,24 +42,24 @@ public class QuantityMeasurementApp {
     public static Length demonstrateAddition(Length l1, Length l2) {
     	return l1.add(l2);
     }
+    
+    //UC7 Target Unit addition
+    public static Length demonstrateLengthAddition(
+            Length length1,
+            Length length2,
+            LengthUnit targetUnit) {
+
+        return length1.add(length2, targetUnit);
+    }
 
     public static void main(String[] args) {
 
 
-    	 System.out.println(
-                 demonstrateAddition(
-                         new Length(1.0, LengthUnit.FEET),
-                         new Length(12.0, LengthUnit.INCHES)));
-
-         System.out.println(
-                 demonstrateAddition(
-                         new Length(12.0, LengthUnit.INCHES),
-                         new Length(1.0, LengthUnit.FEET)));
-
-         System.out.println(
-                 demonstrateAddition(
-                         new Length(1.0, LengthUnit.YARDS),
-                         new Length(3.0, LengthUnit.FEET)));
+    	System.out.println(
+                demonstrateLengthAddition(
+                        new Length(1.0, LengthUnit.FEET),
+                        new Length(12.0, LengthUnit.INCHES),
+                        LengthUnit.YARDS));
         
         
     }

@@ -8,7 +8,8 @@ public class Length {
     private final LengthUnit unit;
 
     public Length(double value, LengthUnit unit) {
-
+    	if (!Double.isFinite(value))
+            throw new IllegalArgumentException("Value must be finite.");
         if (unit == null) {
             throw new IllegalArgumentException("Unit cannot be null");
         }
@@ -47,7 +48,7 @@ public class Length {
     }
     
     private double round(double value) {
-        return Math.round(value * 100.0) / 100.0;
+        return Math.round(value * 1000.0)/1000.0; // now for three decimal places for uc 7
     }
     
     @Override
@@ -82,6 +83,35 @@ public class Length {
     public static Length add(Length l1, Length l2) {
     	return l1.add(l2);
     }
+    
+    
+    //UC7 target Unit addition
+    
+    public Length add(Length other, LengthUnit targetUnit) {
+    	if(other==null) {
+    		throw new IllegalArgumentException("other cant be null");
+    	}
+    	if( targetUnit==null) {
+    		throw new IllegalArgumentException("targetUnit cant be null");
+    	}
+    	return addAndConvert(other, targetUnit);
+    }
+    
+    
+    private Length addAndConvert(Length other,LengthUnit targetUnit) {
+    	
+    	
+    	double add=this.toBaseUnit()+other.toBaseUnit();
+    	double sum=convertFromBaseToTargetUnit(add, targetUnit);
+    	return new Length(round(sum), targetUnit);
+    }
+    
+    private double convertFromBaseToTargetUnit(double lengthInches, LengthUnit targetUnit) {
+    	return lengthInches/targetUnit.getConversionFactor();
+    }
+    
+    
+    
     
     
 
