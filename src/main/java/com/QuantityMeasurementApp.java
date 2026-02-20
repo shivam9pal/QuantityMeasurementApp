@@ -28,8 +28,8 @@ public class QuantityMeasurementApp {
     
     
     /**
-     * overloaded Method 2:
-     * c	onvert using existing Length object.
+     * overloaded method 2
+     * convert using existing Length object.
      */
     public static Length demonstrateLengthConversion(
             Length length,
@@ -37,27 +37,31 @@ public class QuantityMeasurementApp {
 
         return length.convertTo(toUnit);
     }
+    
+    //UC6
+    public static Length demonstrateAddition(Length l1, Length l2) {
+    	return l1.add(l2);
+    }
 
     public static void main(String[] args) {
 
-    	  // conversion examples
-        System.out.println(demonstrateLengthConversion(
-                3.0, LengthUnit.FEET,
-                LengthUnit.INCHES));  
 
-        System.out.println(demonstrateLengthConversion(
-                2.0,LengthUnit.YARDS,
-                LengthUnit.INCHES));  
+    	 System.out.println(
+                 demonstrateAddition(
+                         new Length(1.0, LengthUnit.FEET),
+                         new Length(12.0, LengthUnit.INCHES)));
 
-        Length cm = new Length(10.0, LengthUnit.CENTIMETERS);
-        System.out.println(demonstrateLengthConversion(
-                cm, LengthUnit.INCHES));
+         System.out.println(
+                 demonstrateAddition(
+                         new Length(12.0, LengthUnit.INCHES),
+                         new Length(1.0, LengthUnit.FEET)));
 
-        // equality example
-        Length yard = new Length(1.0, LengthUnit.YARDS);
-        Length feet = new Length(3.0, LengthUnit.FEET);
-
-        System.out.println("Equal? " + demonstrateLengthEquality(yard, feet));
+         System.out.println(
+                 demonstrateAddition(
+                         new Length(1.0, LengthUnit.YARDS),
+                         new Length(3.0, LengthUnit.FEET)));
+        
+        
     }
 	
 	

@@ -64,6 +64,26 @@ public class Length {
         // convert both to base unit before comparing
         return Double.compare(this.toBaseUnit(), other.toBaseUnit()) == 0;
     }
+    
+    
+    //UC6
+    
+    public Length add(Length other) {
+    	if(other==null) {
+    		throw new IllegalArgumentException("other cant be null");
+    	}
+    	
+    	
+    	double baseSum=this.toBaseUnit()+other.toBaseUnit();
+    	double thisSum=baseSum/this.unit.getConversionFactor();
+    	return new Length(round(thisSum),this.unit);
+    }
+    //uc6 static overload method
+    public static Length add(Length l1, Length l2) {
+    	return l1.add(l2);
+    }
+    
+    
 
     @Override
     public int hashCode() {
