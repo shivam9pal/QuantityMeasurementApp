@@ -1,0 +1,34 @@
+package com;
+
+public enum VolumeUnit implements IMeasurable{
+	LITRE(1.0),   //base unit 
+	MILLILITRE(0.001),
+	GALLON(3.78541);
+	
+	private final double conversionFactor;
+	
+	VolumeUnit(double converisonFactor){
+		this.conversionFactor=converisonFactor;
+	}
+	
+
+	
+	
+	public double getConversionFactor() {
+		return conversionFactor;
+	}
+	
+	public double convertToBaseUnit(double value) {
+        return value * conversionFactor;
+    }
+
+    public double convertFromBaseUnit(double baseValue) {
+        return baseValue / conversionFactor;
+    }
+
+	@Override
+	public String getUnitName() {
+		return this.toString();
+	}
+
+}

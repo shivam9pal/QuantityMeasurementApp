@@ -135,60 +135,173 @@ public class QuantityMeasurementApp {
         return q1.add(q2, targetUnit);
     }
     
+    public static  void demonstrateGenericQuanityImpl() {
+    	System.out.println(" UC10 Generic Quantity Demo");
+
+        Quantity<LengthUnit> length1 =
+                new Quantity<>(1.0, LengthUnit.FEET);
+
+        Quantity<LengthUnit> length2 =
+                new Quantity<>(12.0, LengthUnit.INCHES);
+
+        System.out.println("Length Equality: " +
+                demonstrateEquality(length1, length2));
+
+        System.out.println("Length Conversion (Feet → Inches): " +
+                demonstrateConversion(length1, LengthUnit.INCHES));
+
+        System.out.println("Length Addition (Implicit): " +
+                demonstrateAddition(length1, length2));
+
+        System.out.println("Length Addition (Explicit Yards): " +
+                demonstrateAddition(length1, length2, LengthUnit.YARDS));
+
+
+        
+        Quantity<WeightUnit> weight1 =
+                new Quantity<>(1.0, WeightUnit.KILOGRAMS);
+
+        Quantity<WeightUnit> weight2 =
+                new Quantity<>(1000.0, WeightUnit.GRAMS);
+
+        System.out.println("\nWeight Equality: " +
+                demonstrateEquality(weight1, weight2));
+
+        System.out.println("Weight Conversion (Kg → Pounds): " +
+                demonstrateConversion(weight1, WeightUnit.POUNDS));
+
+        System.out.println("Weight Addition (Implicit): " +
+                demonstrateAddition(weight1, weight2));
+
+        System.out.println("Weight Addition (Explicit Pounds): " +
+                demonstrateAddition(weight1, weight2, WeightUnit.POUNDS));
+
+
+        
+        System.out.println("\nCross Category Equality (Should be false): " +
+                length1.equals(weight1)); // prevented by equals()
+    }
     
+    
+    //UC11 added a new Volume Unit 
+    public static void demonstrateVolumeUnit() {
+    	 
+
+	   
+	       
+	        System.out.println(
+	                new Quantity<>(1.0, VolumeUnit.LITRE)
+	                        .equals(new Quantity<>(1.0, VolumeUnit.LITRE)));
+
+	        System.out.println(
+	                new Quantity<>(1.0, VolumeUnit.LITRE)
+	                        .equals(new Quantity<>(1000.0, VolumeUnit.MILLILITRE)));
+
+	        System.out.println(
+	                new Quantity<>(1.0, VolumeUnit.GALLON)
+	                        .equals(new Quantity<>(1.0, VolumeUnit.GALLON)));
+
+	        System.out.println(
+	                new Quantity<>(1.0, VolumeUnit.LITRE)
+	                        .equals(new Quantity<>(0.264172, VolumeUnit.GALLON)));
+
+	        System.out.println(
+	                new Quantity<>(500.0, VolumeUnit.MILLILITRE)
+	                        .equals(new Quantity<>(0.5, VolumeUnit.LITRE)));
+
+	        System.out.println(
+	                new Quantity<>(3.78541, VolumeUnit.LITRE)
+	                        .equals(new Quantity<>(1.0, VolumeUnit.GALLON)));
+
+	       
+	        System.out.println();
+
+	        System.out.println(
+	                new Quantity<>(1.0, VolumeUnit.LITRE)
+	                        .convertTo(VolumeUnit.MILLILITRE));
+
+	        System.out.println(
+	                new Quantity<>(2.0, VolumeUnit.GALLON)
+	                        .convertTo(VolumeUnit.LITRE));
+
+	        System.out.println(
+	                new Quantity<>(500.0, VolumeUnit.MILLILITRE)
+	                        .convertTo(VolumeUnit.GALLON));
+
+	        System.out.println(
+	                new Quantity<>(0.0, VolumeUnit.LITRE)
+	                        .convertTo(VolumeUnit.MILLILITRE));
+
+	        System.out.println(
+	                new Quantity<>(1.0, VolumeUnit.LITRE)
+	                        .convertTo(VolumeUnit.LITRE));
+
+	        
+	        System.out.println();
+
+	        System.out.println(
+	                new Quantity<>(1.0, VolumeUnit.LITRE)
+	                        .add(new Quantity<>(2.0, VolumeUnit.LITRE)));
+
+	        System.out.println(
+	                new Quantity<>(1.0, VolumeUnit.LITRE)
+	                        .add(new Quantity<>(1000.0, VolumeUnit.MILLILITRE)));
+
+	        System.out.println(
+	                new Quantity<>(500.0, VolumeUnit.MILLILITRE)
+	                        .add(new Quantity<>(0.5, VolumeUnit.LITRE)));
+
+	        System.out.println(
+	                new Quantity<>(2.0, VolumeUnit.GALLON)
+	                        .add(new Quantity<>(3.78541, VolumeUnit.LITRE)));
+
+	        
+	        System.out.println();
+
+	        System.out.println(
+	                new Quantity<>(1.0, VolumeUnit.LITRE)
+	                        .add(new Quantity<>(1000.0, VolumeUnit.MILLILITRE),
+	                                VolumeUnit.MILLILITRE));
+
+	        System.out.println(
+	                new Quantity<>(1.0, VolumeUnit.GALLON)
+	                        .add(new Quantity<>(3.78541, VolumeUnit.LITRE),
+	                                VolumeUnit.GALLON));
+
+	        System.out.println(
+	                new Quantity<>(500.0, VolumeUnit.MILLILITRE)
+	                        .add(new Quantity<>(1.0, VolumeUnit.LITRE),
+	                                VolumeUnit.GALLON));
+
+	        System.out.println(
+	                new Quantity<>(2.0, VolumeUnit.LITRE)
+	                        .add(new Quantity<>(4.0, VolumeUnit.GALLON),
+	                                VolumeUnit.LITRE));
+
+	        
+	        System.out.println();
+
+	        System.out.println(
+	                new Quantity<>(1.0, VolumeUnit.LITRE)
+	                        .equals(new Quantity<>(1.0, LengthUnit.FEET)));
+
+	        System.out.println(
+	                new Quantity<>(1.0, VolumeUnit.LITRE)
+	                        .equals(new Quantity<>(1.0, WeightUnit.KILOGRAMS)));
+    }
     
     public static void main(String[] args) {
     	
-    	
+    	demonstrateVolumeUnit();
     
 
-    	        System.out.println("=== UC10 Generic Quantity Demo ===");
-
-    	        Quantity<LengthUnit> length1 =
-    	                new Quantity<>(1.0, LengthUnit.FEET);
-
-    	        Quantity<LengthUnit> length2 =
-    	                new Quantity<>(12.0, LengthUnit.INCHES);
-
-    	        System.out.println("Length Equality: " +
-    	                demonstrateEquality(length1, length2));
-
-    	        System.out.println("Length Conversion (Feet → Inches): " +
-    	                demonstrateConversion(length1, LengthUnit.INCHES));
-
-    	        System.out.println("Length Addition (Implicit): " +
-    	                demonstrateAddition(length1, length2));
-
-    	        System.out.println("Length Addition (Explicit Yards): " +
-    	                demonstrateAddition(length1, length2, LengthUnit.YARDS));
-
-
     	        
-    	        Quantity<WeightUnit> weight1 =
-    	                new Quantity<>(1.0, WeightUnit.KILOGRAMS);
-
-    	        Quantity<WeightUnit> weight2 =
-    	                new Quantity<>(1000.0, WeightUnit.GRAMS);
-
-    	        System.out.println("\nWeight Equality: " +
-    	                demonstrateEquality(weight1, weight2));
-
-    	        System.out.println("Weight Conversion (Kg → Pounds): " +
-    	                demonstrateConversion(weight1, WeightUnit.POUNDS));
-
-    	        System.out.println("Weight Addition (Implicit): " +
-    	                demonstrateAddition(weight1, weight2));
-
-    	        System.out.println("Weight Addition (Explicit Pounds): " +
-    	                demonstrateAddition(weight1, weight2, WeightUnit.POUNDS));
-
-
-    	        
-    	        System.out.println("\nCross Category Equality (Should be false): " +
-    	                length1.equals(weight1)); // prevented by equals()
     	    
     	
         
+    	        
+    	       
+    	    
         
     }
 	
