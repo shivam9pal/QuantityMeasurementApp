@@ -1,10 +1,10 @@
 package com;
 
-public enum LengthUnit {
-	FEET(1.0),
-	INCHES(12.0),
+public enum LengthUnit implements IMeasurable{
+	FEET(12.0),
+	INCHES(1.0),
 	YARDS(36.0),             // 1 yd = 36 inches 
-    CENTIMETERS(0.393701);// 1 cm=0.3 inches 
+    CENTIMETERS(0.0328084);// 1 cm=0.3 inches 
 	
 	private final double conversionFactor;
 	
@@ -14,5 +14,20 @@ public enum LengthUnit {
 	
 	public double getConversionFactor() {
 		return conversionFactor;
+	}
+
+	@Override
+	public double convertToBaseUnit(double value) {
+		return value * conversionFactor;
+	}
+
+	@Override
+	public double convertFromBaseUnit(double baseValue) {
+		return baseValue / conversionFactor;
+	}
+
+	@Override
+	public String getUnitName() {
+		return this.toString();
 	}
 }

@@ -1,6 +1,6 @@
 package com;
 
-public class Weight {
+public class Weight implements IMeasurable{
     private final double value;
     private final WeightUnit unit;
 
@@ -91,4 +91,24 @@ public class Weight {
     public String toString() {
         return "Weight(" + value + ", " + unit + ")";
     }
+
+	@Override
+	public double getConversionFactor() {
+		return unit.getConversionFactor();
+	}
+
+	@Override
+	public double convertToBaseUnit(double value) {
+		return value * unit.getConversionFactor();
+	}
+
+	@Override
+	public double convertFromBaseUnit(double baseValue) {
+		return baseValue / unit.getConversionFactor();
+	}
+
+	@Override
+	public String getUnitName() {
+		return unit.getUnitName();
+	}
 }

@@ -119,12 +119,74 @@ public class QuantityMeasurementApp {
     
     
     
+    //UC10 In the UC !) WE Implemeted the IMeasurable interface to create the contract of rules for Unit type 
+    // And also we have gone from concrete Quantity classes to generic class for Quantity 
+    
+    public static <U extends IMeasurable> boolean demonstrateEquality(Quantity<U> q1, Quantity<U> q2) {
+        return q1.equals(q2);
+    }
+    public static <U extends IMeasurable> Quantity<U> demonstrateConversion(Quantity<U> quantity, U targetUnit) {
+        return quantity.convertTo(targetUnit);
+    }
+    public static <U extends IMeasurable> Quantity<U> demonstrateAddition(Quantity<U> q1, Quantity<U> q2) {
+        return q1.add(q2);
+    }
+    public static <U extends IMeasurable> Quantity<U> demonstrateAddition(Quantity<U> q1, Quantity<U> q2, U targetUnit) {
+        return q1.add(q2, targetUnit);
+    }
     
     
     
     public static void main(String[] args) {
+    	
+    	
+    
 
-    	demonstrateWeightImpl();
+    	        System.out.println("=== UC10 Generic Quantity Demo ===");
+
+    	        Quantity<LengthUnit> length1 =
+    	                new Quantity<>(1.0, LengthUnit.FEET);
+
+    	        Quantity<LengthUnit> length2 =
+    	                new Quantity<>(12.0, LengthUnit.INCHES);
+
+    	        System.out.println("Length Equality: " +
+    	                demonstrateEquality(length1, length2));
+
+    	        System.out.println("Length Conversion (Feet → Inches): " +
+    	                demonstrateConversion(length1, LengthUnit.INCHES));
+
+    	        System.out.println("Length Addition (Implicit): " +
+    	                demonstrateAddition(length1, length2));
+
+    	        System.out.println("Length Addition (Explicit Yards): " +
+    	                demonstrateAddition(length1, length2, LengthUnit.YARDS));
+
+
+    	        
+    	        Quantity<WeightUnit> weight1 =
+    	                new Quantity<>(1.0, WeightUnit.KILOGRAMS);
+
+    	        Quantity<WeightUnit> weight2 =
+    	                new Quantity<>(1000.0, WeightUnit.GRAMS);
+
+    	        System.out.println("\nWeight Equality: " +
+    	                demonstrateEquality(weight1, weight2));
+
+    	        System.out.println("Weight Conversion (Kg → Pounds): " +
+    	                demonstrateConversion(weight1, WeightUnit.POUNDS));
+
+    	        System.out.println("Weight Addition (Implicit): " +
+    	                demonstrateAddition(weight1, weight2));
+
+    	        System.out.println("Weight Addition (Explicit Pounds): " +
+    	                demonstrateAddition(weight1, weight2, WeightUnit.POUNDS));
+
+
+    	        
+    	        System.out.println("\nCross Category Equality (Should be false): " +
+    	                length1.equals(weight1)); // prevented by equals()
+    	    
     	
         
         
