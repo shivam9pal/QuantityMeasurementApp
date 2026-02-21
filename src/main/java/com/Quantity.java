@@ -63,6 +63,63 @@ public class Quantity<U extends IMeasurable> {
         return new Quantity<>(result, targetUnit);
     }
 	
+	//Subtraction Methods 
+	public Quantity<U> subtract(Quantity<U> other){
+		if (other == null) throw new IllegalArgumentException("Other cannot be null");
+		
+		validateSameCategory(other);
+		double baseResult = this.toBaseUnit() - other.toBaseUnit();
+        double converted = unit.convertFromBaseUnit(baseResult);
+
+        return new Quantity<>(round(converted), unit);
+	}
+	
+	public Quantity<U> subtract(Quantity<U> other, U targetUnit) {
+        if (other == null)
+            throw new IllegalArgumentException("Other cannot be null");
+
+        if (targetUnit == null)
+            throw new IllegalArgumentException("Target unit cannot be null");
+
+        validateSameCategory(other);
+
+        double baseResult = this.toBaseUnit() - other.toBaseUnit();
+        double converted = targetUnit.convertFromBaseUnit(baseResult);
+
+        return new Quantity<>(round(converted), targetUnit);
+    }
+	
+	//division
+	 public double divide(Quantity<U> other) {
+	        if (other == null)
+	            throw new IllegalArgumentException("Other cannot be null");
+
+	        validateSameCategory(other);
+
+	        double divisor = other.toBaseUnit();
+
+	        if (Math.abs(divisor) < EPSILON)
+	            throw new ArithmeticException("Division by zero");
+
+	        return this.toBaseUnit() / divisor;
+	    }
+	
+	
+	
+	
+	
+	
+	
+	
+	private double round(double value) {
+		return Math.round(value*100.0)/100.0; // for two decimal places 
+	}
+
+	private void validateSameCategory(Quantity<U> other) {
+		if (!this.unit.getClass().equals(other.unit.getClass()))
+            throw new IllegalArgumentException("Cross-category operation not allowed");	
+	}
+
 	@Override
 	public boolean equals(Object obj) {
 

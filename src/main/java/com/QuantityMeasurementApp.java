@@ -290,18 +290,93 @@ public class QuantityMeasurementApp {
 	                        .equals(new Quantity<>(1.0, WeightUnit.KILOGRAMS)));
     }
     
-    public static void main(String[] args) {
-    	
-    	demonstrateVolumeUnit();
     
+    // UC12 Now we have added two new more features tht is addition and subtraction
+    
+    public static <U extends IMeasurable> void demonstrateSubtraction(
+            Quantity<U> q1,
+            Quantity<U> q2,
+            U targetUnit) {
 
-    	        
-    	    
-    	
-        
-    	        
-    	       
-    	    
+        System.out.println("Subtraction Result: " +
+                q1.subtract(q2, targetUnit));
+    }
+
+    public static <U extends IMeasurable> void demonstrateDivision(
+            Quantity<U> q1,
+            Quantity<U> q2) {
+
+        System.out.println("Division Result: " +
+                q1.divide(q2));
+    }
+    public static void demonstrateDivisionAndSubtraction() {
+   	 
+
+ 	   
+	       
+    	System.out.println("=== SUBTRACTION (Implicit Target Unit) ===");
+
+        System.out.println(
+                new Quantity<>(10.0, LengthUnit.FEET)
+                        .subtract(new Quantity<>(6.0, LengthUnit.INCHES)));
+
+        System.out.println(
+                new Quantity<>(10.0, WeightUnit.KILOGRAMS)
+                        .subtract(new Quantity<>(5000.0, WeightUnit.GRAMS)));
+
+        System.out.println(
+                new Quantity<>(5.0, VolumeUnit.LITRE)
+                        .subtract(new Quantity<>(500.0, VolumeUnit.MILLILITRE)));
+
+        System.out.println("\n=== SUBTRACTION (Explicit Target Unit) ===");
+
+        System.out.println(
+                new Quantity<>(10.0, LengthUnit.FEET)
+                        .subtract(new Quantity<>(6.0, LengthUnit.INCHES), LengthUnit.INCHES));
+
+        System.out.println(
+                new Quantity<>(10.0, WeightUnit.KILOGRAMS)
+                        .subtract(new Quantity<>(5000.0, WeightUnit.GRAMS), WeightUnit.GRAMS));
+
+        System.out.println(
+                new Quantity<>(5.0, VolumeUnit.LITRE)
+                        .subtract(new Quantity<>(2.0, VolumeUnit.LITRE), VolumeUnit.MILLILITRE));
+
+        System.out.println("\n=== NEGATIVE RESULTS ===");
+
+        System.out.println(
+                new Quantity<>(5.0, LengthUnit.FEET)
+                        .subtract(new Quantity<>(10.0, LengthUnit.FEET)));
+
+        System.out.println("\n=== ZERO RESULT ===");
+
+        System.out.println(
+                new Quantity<>(10.0, LengthUnit.FEET)
+                        .subtract(new Quantity<>(120.0, LengthUnit.INCHES)));
+
+        System.out.println("\n=== DIVISION ===");
+
+        System.out.println(
+                new Quantity<>(10.0, LengthUnit.FEET)
+                        .divide(new Quantity<>(2.0, LengthUnit.FEET)));
+
+        System.out.println(
+                new Quantity<>(24.0, LengthUnit.INCHES)
+                        .divide(new Quantity<>(2.0, LengthUnit.FEET)));
+
+        System.out.println(
+                new Quantity<>(2000.0, WeightUnit.GRAMS)
+                        .divide(new Quantity<>(1.0, WeightUnit.KILOGRAMS)));
+
+        System.out.println(
+                new Quantity<>(1000.0, VolumeUnit.MILLILITRE)
+                        .divide(new Quantity<>(1.0, VolumeUnit.LITRE)));
+}
+    
+    
+    
+    public static void main(String[] args) {
+    	demonstrateDivisionAndSubtraction();
         
     }
 	
