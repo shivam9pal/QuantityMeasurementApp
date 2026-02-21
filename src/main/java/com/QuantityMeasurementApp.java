@@ -51,22 +51,90 @@ public class QuantityMeasurementApp {
 
         return length1.add(length2, targetUnit);
     }
+    
+  //UC8 is Standalone LengthUnit class patter or we can say top level class 
+    // which pattern is already followed in the QuantityMeasurementApp from beginning
 
+  //UC9 adding weight  as well 
+    
+    public static  void demonstrateWeightImpl() {
+    	System.out.println("\n Equality Comparisons ===");
+
+        System.out.println(new Weight(1.0, WeightUnit.KILOGRAMS)
+                .equals(new Weight(1.0, WeightUnit.KILOGRAMS)));
+        System.out.println(new Weight(1.0, WeightUnit.KILOGRAMS)
+                .equals(new Weight(1000.0, WeightUnit.GRAMS)));
+        System.out.println(new Weight(2.0, WeightUnit.POUNDS)
+                .equals(new Weight(2.0, WeightUnit.POUNDS)));
+        System.out.println(new Weight(1.0, WeightUnit.KILOGRAMS)
+                .equals(new Weight(2.20462, WeightUnit.POUNDS)));
+        System.out.println(new Weight(500.0, WeightUnit.GRAMS)
+                .equals(new Weight(0.5, WeightUnit.KILOGRAMS)));
+        System.out.println(new Weight(1.0, WeightUnit.POUNDS)
+                .equals(new Weight(453.592, WeightUnit.GRAMS)));
+
+
+
+        System.out.println("\nUnit Conversions ===");
+
+        System.out.println(new Weight(1.0, WeightUnit.KILOGRAMS)
+                .convertTo(WeightUnit.GRAMS));
+        System.out.println(new Weight(2.0, WeightUnit.POUNDS)
+                .convertTo(WeightUnit.KILOGRAMS));
+        System.out.println(new Weight(500.0, WeightUnit.GRAMS)
+                .convertTo(WeightUnit.POUNDS));
+        System.out.println(new Weight(0.0, WeightUnit.KILOGRAMS)
+                .convertTo(WeightUnit.GRAMS));
+
+
+
+        System.out.println(" Addition (Implicit Target Unit) ===");
+        System.out.println(new Weight(1.0, WeightUnit.KILOGRAMS)
+                .add(new Weight(2.0, WeightUnit.KILOGRAMS)));
+        System.out.println(new Weight(1.0, WeightUnit.KILOGRAMS)
+                .add(new Weight(1000.0, WeightUnit.GRAMS)));
+        System.out.println(new Weight(500.0, WeightUnit.GRAMS)
+                .add(new Weight(0.5, WeightUnit.KILOGRAMS)));
+
+
+
+        System.out.println("\nAddition (Explicit Target Unit) ===");
+        System.out.println(new Weight(1.0, WeightUnit.KILOGRAMS)
+                .add(new Weight(1000.0, WeightUnit.GRAMS),
+                        WeightUnit.GRAMS));
+        System.out.println(new Weight(1.0, WeightUnit.POUNDS)
+                .add(new Weight(453.592, WeightUnit.GRAMS),
+                        WeightUnit.POUNDS));
+        System.out.println(new Weight(2.0, WeightUnit.KILOGRAMS)
+                .add(new Weight(4.0, WeightUnit.POUNDS),
+                        WeightUnit.KILOGRAMS));
+
+
+
+        System.out.println("\nCategory Incompatibility ");
+
+        System.out.println(new Weight(1.0, WeightUnit.KILOGRAMS)
+                .equals(new Length(1.0, LengthUnit.FEET)));
+    }
+    
+    
+    
+    
+    
+    
     public static void main(String[] args) {
 
-
-    	System.out.println(
-                demonstrateLengthAddition(
-                        new Length(1.0, LengthUnit.FEET),
-                        new Length(12.0, LengthUnit.INCHES),
-                        LengthUnit.YARDS));
+    	demonstrateWeightImpl();
+    	
         
         
     }
-	//UC8 is Standalone LengthUnit class patter or we can say top level class 
-    // which pattern is already followed in the QuantityMeasurementApp from begining
-    
-    //UC9
 	
+    
+    
+    
+    
+    
+    
 
 }

@@ -80,7 +80,7 @@ public class Length {
     	return new Length(round(thisSum),this.unit);
     }
     //uc6 static overload method
-    public static Length add(Length l1, Length l2) {
+    public  Length add(Length l1, Length l2) {
     	return l1.add(l2);
     }
     
