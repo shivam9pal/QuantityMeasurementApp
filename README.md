@@ -111,11 +111,38 @@ This project follows a feature-branch workflow where each use case (UC) is devel
 
 ## Branch Structure
 
-- `main` - Production-ready code
-- `dev` - Integration branch for all features
-- `feature/UC[1-13]-*` - Individual feature branches for each use case
+### Main Branches
+- **`main`** - Production-ready stable code
+- **`dev`** - Development integration branch where all features are merged and tested
+
+### Feature Branches (Use Cases)
+- **`feature/UC1-FeetEquality`** - Feet measurement equality comparison
+- **`feature/UC2-InchEquality`** - Inch measurement equality comparison
+- **`feature/UC3-GenericLength`** - Generic length measurement framework
+- **`feature/UC4-YardEquality`** - Yard measurement support
+- **`feature/UC5-UnitConversion`** - Unit conversion logic
+- **`feature/UC6-UnitAddition`** - Addition operations for measurements
+- **`feature/UC7-TargetUnitAddition`** - Cross-unit addition with target conversion
+- **`feature/UC8-StandaloneUnit`** - Standalone unit class architecture
+- **`feature/UC9-Weight-Measurement`** - Weight measurement support (grams, kg, tons)
+- **`feature/UC10-Unit-Interface-For-MultiCategory-Support`** - Generic unit interface for multiple categories
+- **`feature/UC11-Volume-Measurement-Equality`** - Volume measurement support (liters, gallons, ml)
+- **`feature/UC12-Subtraction-and-Division`** - Subtraction and division operations
+- **`feature/UC13-Centralized-Arithmetic-Logic`** - Unified arithmetic operation handler
+
+### Workflow
+```
+main (production)
+ ↑
+dev (integration)
+ ↑
+feature/UC* (individual features)
+```
+
+Each feature branch is created from `dev`, developed independently, and merged back to `dev` after thorough testing.
 
 ---
 
 **Author:** Shivam Pal  
-**Last Updated:** 2026-02-24 05:48:39
+**Repository:** https://github.com/shivam9pal/QuantityMeasurementApp  
+**Last Updated:** 2026-02-24
