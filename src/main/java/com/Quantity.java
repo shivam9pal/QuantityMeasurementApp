@@ -83,10 +83,35 @@ public class Quantity<U extends IMeasurable> {
     private double performBaseArithmetic(Quantity<U> other,
                                          ArithmeticOperation operation) {
 
+    	// Validate arithmetic support
+        this.unit.validateOperationSupport(operation.name());
+        other.unit.validateOperationSupport(operation.name());
+
         double base1 = this.toBaseUnit();
         double base2 = other.toBaseUnit();
 
         return operation.compute(base1, base2);
+    }
+    
+    public Quantity<U> convertTo(U targetUnit) {
+
+        if (targetUnit == null)
+            throw new IllegalArgumentException("Target unit cannot be null");
+
+        if (unit instanceof TemperatureUnit tempUnit) {
+
+            TemperatureUnit target = (TemperatureUnit) targetUnit;
+
+            double converted =
+                    tempUnit.convertTo(value, target);
+
+            return new Quantity<>(converted, targetUnit);
+        }
+
+        double base = toBaseUnit();
+        double converted = targetUnit.convertFromBaseUnit(base);
+
+        return new Quantity<>(converted, targetUnit);
     }
 
     
@@ -174,4 +199,6 @@ public class Quantity<U extends IMeasurable> {
     public String toString() {
         return "Quantity(" + value + ", " + unit.getUnitName() + ")";
     }
+
+	
 }
