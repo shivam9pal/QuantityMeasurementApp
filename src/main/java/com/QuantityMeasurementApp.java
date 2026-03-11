@@ -1,420 +1,121 @@
 package com;
 
+import com.controller.QuantityMeasurementController;
+import com.dto.QuantityDTO;
+import com.exception.QuantityMeasurementException;
+import com.repository.IQuantityMeasurementRepository;
+import com.repository.QuantityMeasurementCacheRepository;
+import com.service.IQuantityMeasurementService;
+import com.service.QuantityMeasurementServiceImpl;
+
+/**
+ * UC15 Entry Point — wire layers, delegate everything to controller.
+ * 
+ */
 public class QuantityMeasurementApp {
 
-	
-	
-	public static boolean demonstrateLengthEquality(Length l1, Length l2) {
-        return l1.equals(l2);
-    }
-	
-
-    public static void demonstrateLengthComparison(
-            double value1, LengthUnit unit1,
-            double value2, LengthUnit unit2) {
-
-        Length l1 = new Length(value1, unit1);
-        Length l2 = new Length(value2, unit2);
-
-        System.out.println(l1 + " and " + l2 +
-                " -> Equal (" + l1.equals(l2) + ")");
-    }
-    
-    
-    public static Length demonstrateLengthConversion(double value, LengthUnit fromUnit, LengthUnit toUnit) {
-    	Length length=new Length(value,fromUnit);
-    	return length.convertTo(toUnit);
-    }
-    
-    
-    /**
-     * overloaded method 2
-     * convert using existing Length object.
-     */
-    public static Length demonstrateLengthConversion(
-            Length length,
-            LengthUnit toUnit) {
-
-        return length.convertTo(toUnit);
-    }
-    
-    //UC6
-    public static Length demonstrateAddition(Length l1, Length l2) {
-    	return l1.add(l2);
-    }
-    
-    //UC7 Target Unit addition
-    public static Length demonstrateLengthAddition(
-            Length length1,
-            Length length2,
-            LengthUnit targetUnit) {
-
-        return length1.add(length2, targetUnit);
-    }
-    
-  //UC8 is Standalone LengthUnit class patter or we can say top level class 
-    // which pattern is already followed in the QuantityMeasurementApp from beginning
-
-  //UC9 adding weight  as well 
-    
-    public static  void demonstrateWeightImpl() {
-    	System.out.println("\n Equality Comparisons ===");
-
-        System.out.println(new Weight(1.0, WeightUnit.KILOGRAMS)
-                .equals(new Weight(1.0, WeightUnit.KILOGRAMS)));
-        System.out.println(new Weight(1.0, WeightUnit.KILOGRAMS)
-                .equals(new Weight(1000.0, WeightUnit.GRAMS)));
-        System.out.println(new Weight(2.0, WeightUnit.POUNDS)
-                .equals(new Weight(2.0, WeightUnit.POUNDS)));
-        System.out.println(new Weight(1.0, WeightUnit.KILOGRAMS)
-                .equals(new Weight(2.20462, WeightUnit.POUNDS)));
-        System.out.println(new Weight(500.0, WeightUnit.GRAMS)
-                .equals(new Weight(0.5, WeightUnit.KILOGRAMS)));
-        System.out.println(new Weight(1.0, WeightUnit.POUNDS)
-                .equals(new Weight(453.592, WeightUnit.GRAMS)));
-
-
-
-        System.out.println("\nUnit Conversions ===");
-
-        System.out.println(new Weight(1.0, WeightUnit.KILOGRAMS)
-                .convertTo(WeightUnit.GRAMS));
-        System.out.println(new Weight(2.0, WeightUnit.POUNDS)
-                .convertTo(WeightUnit.KILOGRAMS));
-        System.out.println(new Weight(500.0, WeightUnit.GRAMS)
-                .convertTo(WeightUnit.POUNDS));
-        System.out.println(new Weight(0.0, WeightUnit.KILOGRAMS)
-                .convertTo(WeightUnit.GRAMS));
-
-
-
-        System.out.println(" Addition (Implicit Target Unit) ===");
-        System.out.println(new Weight(1.0, WeightUnit.KILOGRAMS)
-                .add(new Weight(2.0, WeightUnit.KILOGRAMS)));
-        System.out.println(new Weight(1.0, WeightUnit.KILOGRAMS)
-                .add(new Weight(1000.0, WeightUnit.GRAMS)));
-        System.out.println(new Weight(500.0, WeightUnit.GRAMS)
-                .add(new Weight(0.5, WeightUnit.KILOGRAMS)));
-
-
-
-        System.out.println("\nAddition (Explicit Target Unit) ===");
-        System.out.println(new Weight(1.0, WeightUnit.KILOGRAMS)
-                .add(new Weight(1000.0, WeightUnit.GRAMS),
-                        WeightUnit.GRAMS));
-        System.out.println(new Weight(1.0, WeightUnit.POUNDS)
-                .add(new Weight(453.592, WeightUnit.GRAMS),
-                        WeightUnit.POUNDS));
-        System.out.println(new Weight(2.0, WeightUnit.KILOGRAMS)
-                .add(new Weight(4.0, WeightUnit.POUNDS),
-                        WeightUnit.KILOGRAMS));
-
-
-
-        System.out.println("\nCategory Incompatibility ");
-
-        System.out.println(new Weight(1.0, WeightUnit.KILOGRAMS)
-                .equals(new Length(1.0, LengthUnit.FEET)));
-    }
-    
-    
-    
-    //UC10 In the UC !) WE Implemeted the IMeasurable interface to create the contract of rules for Unit type 
-    // And also we have gone from concrete Quantity classes to generic class for Quantity 
-    
-    public static <U extends IMeasurable> boolean demonstrateEquality(Quantity<U> q1, Quantity<U> q2) {
-        return q1.equals(q2);
-    }
-    public static <U extends IMeasurable> Quantity<U> demonstrateConversion(Quantity<U> quantity, U targetUnit) {
-        return quantity.convertTo(targetUnit);
-    }
-    public static <U extends IMeasurable> Quantity<U> demonstrateAddition(Quantity<U> q1, Quantity<U> q2) {
-        return q1.add(q2);
-    }
-    public static <U extends IMeasurable> Quantity<U> demonstrateAddition(Quantity<U> q1, Quantity<U> q2, U targetUnit) {
-        return q1.add(q2, targetUnit);
-    }
-    
-    public static  void demonstrateGenericQuanityImpl() {
-    	System.out.println(" UC10 Generic Quantity Demo");
-
-        Quantity<LengthUnit> length1 =
-                new Quantity<>(1.0, LengthUnit.FEET);
-
-        Quantity<LengthUnit> length2 =
-                new Quantity<>(12.0, LengthUnit.INCHES);
-
-        System.out.println("Length Equality: " +
-                demonstrateEquality(length1, length2));
-
-        System.out.println("Length Conversion (Feet → Inches): " +
-                demonstrateConversion(length1, LengthUnit.INCHES));
-
-        System.out.println("Length Addition (Implicit): " +
-                demonstrateAddition(length1, length2));
-
-        System.out.println("Length Addition (Explicit Yards): " +
-                demonstrateAddition(length1, length2, LengthUnit.YARDS));
-
-
-        
-        Quantity<WeightUnit> weight1 =
-                new Quantity<>(1.0, WeightUnit.KILOGRAMS);
-
-        Quantity<WeightUnit> weight2 =
-                new Quantity<>(1000.0, WeightUnit.GRAMS);
-
-        System.out.println("\nWeight Equality: " +
-                demonstrateEquality(weight1, weight2));
-
-        System.out.println("Weight Conversion (Kg → Pounds): " +
-                demonstrateConversion(weight1, WeightUnit.POUNDS));
-
-        System.out.println("Weight Addition (Implicit): " +
-                demonstrateAddition(weight1, weight2));
-
-        System.out.println("Weight Addition (Explicit Pounds): " +
-                demonstrateAddition(weight1, weight2, WeightUnit.POUNDS));
-
-
-        
-        System.out.println("\nCross Category Equality (Should be false): " +
-                length1.equals(weight1)); // prevented by equals()
-    }
-    
-    
-    //UC11 added a new Volume Unit 
-    public static void demonstrateVolumeUnit() {
-    	 
-
-	   
-	       
-	        System.out.println(
-	                new Quantity<>(1.0, VolumeUnit.LITRE)
-	                        .equals(new Quantity<>(1.0, VolumeUnit.LITRE)));
-
-	        System.out.println(
-	                new Quantity<>(1.0, VolumeUnit.LITRE)
-	                        .equals(new Quantity<>(1000.0, VolumeUnit.MILLILITRE)));
-
-	        System.out.println(
-	                new Quantity<>(1.0, VolumeUnit.GALLON)
-	                        .equals(new Quantity<>(1.0, VolumeUnit.GALLON)));
-
-	        System.out.println(
-	                new Quantity<>(1.0, VolumeUnit.LITRE)
-	                        .equals(new Quantity<>(0.264172, VolumeUnit.GALLON)));
-
-	        System.out.println(
-	                new Quantity<>(500.0, VolumeUnit.MILLILITRE)
-	                        .equals(new Quantity<>(0.5, VolumeUnit.LITRE)));
-
-	        System.out.println(
-	                new Quantity<>(3.78541, VolumeUnit.LITRE)
-	                        .equals(new Quantity<>(1.0, VolumeUnit.GALLON)));
-
-	       
-	        System.out.println();
-
-	        System.out.println(
-	                new Quantity<>(1.0, VolumeUnit.LITRE)
-	                        .convertTo(VolumeUnit.MILLILITRE));
-
-	        System.out.println(
-	                new Quantity<>(2.0, VolumeUnit.GALLON)
-	                        .convertTo(VolumeUnit.LITRE));
-
-	        System.out.println(
-	                new Quantity<>(500.0, VolumeUnit.MILLILITRE)
-	                        .convertTo(VolumeUnit.GALLON));
-
-	        System.out.println(
-	                new Quantity<>(0.0, VolumeUnit.LITRE)
-	                        .convertTo(VolumeUnit.MILLILITRE));
-
-	        System.out.println(
-	                new Quantity<>(1.0, VolumeUnit.LITRE)
-	                        .convertTo(VolumeUnit.LITRE));
-
-	        
-	        System.out.println();
-
-	        System.out.println(
-	                new Quantity<>(1.0, VolumeUnit.LITRE)
-	                        .add(new Quantity<>(2.0, VolumeUnit.LITRE)));
-
-	        System.out.println(
-	                new Quantity<>(1.0, VolumeUnit.LITRE)
-	                        .add(new Quantity<>(1000.0, VolumeUnit.MILLILITRE)));
-
-	        System.out.println(
-	                new Quantity<>(500.0, VolumeUnit.MILLILITRE)
-	                        .add(new Quantity<>(0.5, VolumeUnit.LITRE)));
-
-	        System.out.println(
-	                new Quantity<>(2.0, VolumeUnit.GALLON)
-	                        .add(new Quantity<>(3.78541, VolumeUnit.LITRE)));
-
-	        
-	        System.out.println();
-
-	        System.out.println(
-	                new Quantity<>(1.0, VolumeUnit.LITRE)
-	                        .add(new Quantity<>(1000.0, VolumeUnit.MILLILITRE),
-	                                VolumeUnit.MILLILITRE));
-
-	        System.out.println(
-	                new Quantity<>(1.0, VolumeUnit.GALLON)
-	                        .add(new Quantity<>(3.78541, VolumeUnit.LITRE),
-	                                VolumeUnit.GALLON));
-
-	        System.out.println(
-	                new Quantity<>(500.0, VolumeUnit.MILLILITRE)
-	                        .add(new Quantity<>(1.0, VolumeUnit.LITRE),
-	                                VolumeUnit.GALLON));
-
-	        System.out.println(
-	                new Quantity<>(2.0, VolumeUnit.LITRE)
-	                        .add(new Quantity<>(4.0, VolumeUnit.GALLON),
-	                                VolumeUnit.LITRE));
-
-	        
-	        System.out.println();
-
-	        System.out.println(
-	                new Quantity<>(1.0, VolumeUnit.LITRE)
-	                        .equals(new Quantity<>(1.0, LengthUnit.FEET)));
-
-	        System.out.println(
-	                new Quantity<>(1.0, VolumeUnit.LITRE)
-	                        .equals(new Quantity<>(1.0, WeightUnit.KILOGRAMS)));
-    }
-    
-    
-    // UC12 Now we have added two new more features tht is addition and subtraction
-    
-    public static <U extends IMeasurable> void demonstrateSubtraction(
-            Quantity<U> q1,
-            Quantity<U> q2,
-            U targetUnit) {
-
-        System.out.println("Subtraction Result: " +
-                q1.subtract(q2, targetUnit));
-    }
-
-    public static <U extends IMeasurable> void demonstrateDivision(
-            Quantity<U> q1,
-            Quantity<U> q2) {
-
-        System.out.println("Division Result: " +
-                q1.divide(q2));
-    }
-    public static void demonstrateDivisionAndSubtraction() {
-   	 
-
- 	   
-	       
-    	System.out.println("=== SUBTRACTION (Implicit Target Unit) ===");
-
-        System.out.println(
-                new Quantity<>(10.0, LengthUnit.FEET)
-                        .subtract(new Quantity<>(6.0, LengthUnit.INCHES)));
-
-        System.out.println(
-                new Quantity<>(10.0, WeightUnit.KILOGRAMS)
-                        .subtract(new Quantity<>(5000.0, WeightUnit.GRAMS)));
-
-        System.out.println(
-                new Quantity<>(5.0, VolumeUnit.LITRE)
-                        .subtract(new Quantity<>(500.0, VolumeUnit.MILLILITRE)));
-
-        System.out.println("\n=== SUBTRACTION (Explicit Target Unit) ===");
-
-        System.out.println(
-                new Quantity<>(10.0, LengthUnit.FEET)
-                        .subtract(new Quantity<>(6.0, LengthUnit.INCHES), LengthUnit.INCHES));
-
-        System.out.println(
-                new Quantity<>(10.0, WeightUnit.KILOGRAMS)
-                        .subtract(new Quantity<>(5000.0, WeightUnit.GRAMS), WeightUnit.GRAMS));
-
-        System.out.println(
-                new Quantity<>(5.0, VolumeUnit.LITRE)
-                        .subtract(new Quantity<>(2.0, VolumeUnit.LITRE), VolumeUnit.MILLILITRE));
-
-        System.out.println("\n=== NEGATIVE RESULTS ===");
-
-        System.out.println(
-                new Quantity<>(5.0, LengthUnit.FEET)
-                        .subtract(new Quantity<>(10.0, LengthUnit.FEET)));
-
-        System.out.println("\n=== ZERO RESULT ===");
-
-        System.out.println(
-                new Quantity<>(10.0, LengthUnit.FEET)
-                        .subtract(new Quantity<>(120.0, LengthUnit.INCHES)));
-
-        System.out.println("\n=== DIVISION ===");
-
-        System.out.println(
-                new Quantity<>(10.0, LengthUnit.FEET)
-                        .divide(new Quantity<>(2.0, LengthUnit.FEET)));
-
-        System.out.println(
-                new Quantity<>(24.0, LengthUnit.INCHES)
-                        .divide(new Quantity<>(2.0, LengthUnit.FEET)));
-
-        System.out.println(
-                new Quantity<>(2000.0, WeightUnit.GRAMS)
-                        .divide(new Quantity<>(1.0, WeightUnit.KILOGRAMS)));
-
-        System.out.println(
-                new Quantity<>(1000.0, VolumeUnit.MILLILITRE)
-                        .divide(new Quantity<>(1.0, VolumeUnit.LITRE)));
-    }
-    
-    //UC14
-    public static void demonstrateTemprature() {
-    	System.out.println("=== Temperature Demonstration ===");
-
-        Quantity<TemperatureUnit> temp1 =
-                new Quantity<>(0.0, TemperatureUnit.CELSIUS);
-
-        Quantity<TemperatureUnit> temp2 =
-                new Quantity<>(32.0, TemperatureUnit.FAHRENHEIT);
-
-        System.out.println("0°C equals 32°F: " + temp1.equals(temp2));
-
-        Quantity<TemperatureUnit> celsius =
-                new Quantity<>(100.0, TemperatureUnit.CELSIUS);
-
-        Quantity<TemperatureUnit> fahrenheit =
-                celsius.convertTo(TemperatureUnit.FAHRENHEIT);
-
-        System.out.println("100°C = " + fahrenheit.getValue() + "°F");
+    public static void main(String[] args) {
+
+        // ── Wire up N-Tier layers (Factory Pattern) 
+        IQuantityMeasurementRepository repository =
+                QuantityMeasurementCacheRepository.getInstance();
+
+        IQuantityMeasurementService service =
+                new QuantityMeasurementServiceImpl(repository);
+
+        QuantityMeasurementController controller =
+                new QuantityMeasurementController(service);
+
+        System.out.println(" N-Tier Quantity Measurement App ===\n");
+
+        // ── UC1–UC5: Length Equality & Conversion 
+        System.out.println("--- LENGTH COMPARISON ---");
+        controller.performComparison(
+                new QuantityDTO(1.0,  QuantityDTO.LengthUnit.FEET),
+                new QuantityDTO(12.0, QuantityDTO.LengthUnit.INCHES));
+        controller.performComparison(
+                new QuantityDTO(1.0, QuantityDTO.LengthUnit.YARDS),
+                new QuantityDTO(3.0, QuantityDTO.LengthUnit.FEET));
+
+        System.out.println("\n--- LENGTH CONVERSION ---");
+        controller.performConversion(
+                new QuantityDTO(1.0, QuantityDTO.LengthUnit.FEET),
+                new QuantityDTO(0.0, QuantityDTO.LengthUnit.INCHES));
+        controller.performConversion(
+                new QuantityDTO(1.0, QuantityDTO.LengthUnit.YARDS),
+                new QuantityDTO(0.0, QuantityDTO.LengthUnit.FEET));
+
+        // ── UC6–UC7: Length Addition 
+        System.out.println("\n--- LENGTH ADDITION ---");
+        controller.performAddition(
+                new QuantityDTO(1.0,  QuantityDTO.LengthUnit.FEET),
+                new QuantityDTO(12.0, QuantityDTO.LengthUnit.INCHES));
+        controller.performAddition(
+                new QuantityDTO(1.0,  QuantityDTO.LengthUnit.FEET),
+                new QuantityDTO(12.0, QuantityDTO.LengthUnit.INCHES),
+                new QuantityDTO(0.0,  QuantityDTO.LengthUnit.YARDS));  // target = YARDS
+
+        // ── UC9–UC10: Weight 
+        System.out.println("\n--- WEIGHT OPERATIONS ---");
+        controller.performComparison(
+                new QuantityDTO(1.0,    QuantityDTO.WeightUnit.KILOGRAMS),
+                new QuantityDTO(1000.0, QuantityDTO.WeightUnit.GRAMS));
+        controller.performAddition(
+                new QuantityDTO(1.0,    QuantityDTO.WeightUnit.KILOGRAMS),
+                new QuantityDTO(1000.0, QuantityDTO.WeightUnit.GRAMS));
+        controller.performConversion(
+                new QuantityDTO(1.0, QuantityDTO.WeightUnit.KILOGRAMS),
+                new QuantityDTO(0.0, QuantityDTO.WeightUnit.GRAMS));
+
+        // ── UC11: Volume 
+        System.out.println("\n--- VOLUME OPERATIONS ---");
+        controller.performComparison(
+                new QuantityDTO(1.0,    QuantityDTO.VolumeUnit.LITRE),
+                new QuantityDTO(1000.0, QuantityDTO.VolumeUnit.MILLILITRE));
+        controller.performAddition(
+                new QuantityDTO(1.0, QuantityDTO.VolumeUnit.LITRE),
+                new QuantityDTO(2.0, QuantityDTO.VolumeUnit.LITRE));
+        controller.performConversion(
+                new QuantityDTO(1.0, QuantityDTO.VolumeUnit.GALLON),
+                new QuantityDTO(0.0, QuantityDTO.VolumeUnit.LITRE));
+
+        // ── UC12: Subtraction & Division 
+        System.out.println("\n--- SUBTRACTION ---");
+        controller.performSubtraction(
+                new QuantityDTO(10.0, QuantityDTO.LengthUnit.FEET),
+                new QuantityDTO(6.0,  QuantityDTO.LengthUnit.INCHES));
+        controller.performSubtraction(
+                new QuantityDTO(10.0,   QuantityDTO.WeightUnit.KILOGRAMS),
+                new QuantityDTO(5000.0, QuantityDTO.WeightUnit.GRAMS),
+                new QuantityDTO(0.0,    QuantityDTO.WeightUnit.GRAMS));  
+
+        System.out.println("\n--- DIVISION ---");
+        controller.performDivision(
+                new QuantityDTO(10.0, QuantityDTO.LengthUnit.FEET),
+                new QuantityDTO(2.0,  QuantityDTO.LengthUnit.FEET));
+        controller.performDivision(
+                new QuantityDTO(2000.0, QuantityDTO.WeightUnit.GRAMS),
+                new QuantityDTO(1.0,    QuantityDTO.WeightUnit.KILOGRAMS));
+
+        // ── UC14 Temperature 
+        System.out.println("\n TEMPERATURE");
+        controller.performComparison(
+                new QuantityDTO(0.0,  QuantityDTO.TemperatureUnit.CELSIUS),
+                new QuantityDTO(32.0, QuantityDTO.TemperatureUnit.FAHRENHEIT));
+        controller.performConversion(
+                new QuantityDTO(100.0, QuantityDTO.TemperatureUnit.CELSIUS),
+                new QuantityDTO(0.0,   QuantityDTO.TemperatureUnit.FAHRENHEIT));
 
         try {
-
-            celsius.add(new Quantity<>(50.0, TemperatureUnit.CELSIUS));
-
-        } catch (UnsupportedOperationException e) {
-
-            System.out.println(
-                    "Cannot add absolute temperatures: " + e.getMessage());
+            controller.performAddition(
+                    new QuantityDTO(10.0, QuantityDTO.TemperatureUnit.CELSIUS),
+                    new QuantityDTO(20.0, QuantityDTO.TemperatureUnit.CELSIUS));
+        } catch (QuantityMeasurementException e) {
+            System.out.println("Expected error → " + e.getMessage());
         }
-    }
-    
-    
-    public static void main(String[] args) {
-    	demonstrateTemprature();
-        
-    }
-	
-    
-    
-    
-    
-    
-    
 
+        // ── Operation History 
+        System.out.println("\n--- OPERATION HISTORY ---");
+        repository.getAllMeasurements().forEach(System.out::println);
+    }
 }

@@ -7,6 +7,11 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
+import com.core.Length;
+import com.core.Weight;
+import com.unit.LengthUnit;
+import com.unit.WeightUnit;
+
 public class WeightImplTest {
     //Weight feature testing 
     

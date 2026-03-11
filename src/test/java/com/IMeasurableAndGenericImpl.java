@@ -9,6 +9,11 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
+import com.core.IMeasurable;
+import com.core.Quantity;
+import com.unit.LengthUnit;
+import com.unit.WeightUnit;
+
 
 public class IMeasurableAndGenericImpl {
 

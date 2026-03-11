@@ -8,6 +8,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
+import com.core.Length;
+import com.unit.LengthUnit;
+
 public class QuantityMeasurementAppTest {
 
     private static final double EPSILON = 0.01;
