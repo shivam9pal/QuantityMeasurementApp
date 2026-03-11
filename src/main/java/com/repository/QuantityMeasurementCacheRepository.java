@@ -1,6 +1,5 @@
 package com.repository;
 
-
 import java.io.EOFException;
 import java.io.File;
 import java.io.FileInputStream;
@@ -15,9 +14,10 @@ import java.util.List;
 import com.entity.QuantityMeasurementEntity;
 
 /**
- stream: skips writing header when appending to existing file.
+ * stream: skips writing header when appending to existing file.
  */
 class AppendableObjectOutputStream extends ObjectOutputStream {
+
     public AppendableObjectOutputStream(OutputStream out) throws IOException {
         super(out);
     }
@@ -25,14 +25,17 @@ class AppendableObjectOutputStream extends ObjectOutputStream {
     @Override
     protected void writeStreamHeader() throws IOException {
         File file = new File(QuantityMeasurementCacheRepository.FILE_NAME);
-        if (!file.exists() || file.length() == 0) super.writeStreamHeader();
-        else reset();
+        if (!file.exists() || file.length() == 0) {
+            super.writeStreamHeader(); 
+        }else {
+            reset();
+        }
     }
 }
 
 /**
- * Singleton cache repository.
- * Persists QuantityMeasurementEntity objects to disk via Java Serialization.
+ * Singleton cache repository. Persists QuantityMeasurementEntity objects to
+ * disk via Java Serialization.
  */
 public class QuantityMeasurementCacheRepository implements IQuantityMeasurementRepository {
 
@@ -47,7 +50,9 @@ public class QuantityMeasurementCacheRepository implements IQuantityMeasurementR
     }
 
     public static QuantityMeasurementCacheRepository getInstance() {
-        if (instance == null) instance = new QuantityMeasurementCacheRepository();
+        if (instance == null) {
+            instance = new QuantityMeasurementCacheRepository();
+        }
         return instance;
     }
 
@@ -62,9 +67,13 @@ public class QuantityMeasurementCacheRepository implements IQuantityMeasurementR
         return new ArrayList<>(quantityMeasurementEntityCache);
     }
 
+    @Override
+    public void deleteAll() {
+        quantityMeasurementEntityCache.clear();
+    }
+
     private void saveToDisk(QuantityMeasurementEntity entity) {
-        try (FileOutputStream fos = new FileOutputStream(FILE_NAME, true);
-             AppendableObjectOutputStream oos = new AppendableObjectOutputStream(fos)) {
+        try (FileOutputStream fos = new FileOutputStream(FILE_NAME, true); AppendableObjectOutputStream oos = new AppendableObjectOutputStream(fos)) {
             oos.writeObject(entity);
         } catch (IOException e) {
             System.err.println("Error saving entity: " + e.getMessage());
@@ -73,13 +82,14 @@ public class QuantityMeasurementCacheRepository implements IQuantityMeasurementR
 
     private void loadFromDisk() {
         File file = new File(FILE_NAME);
-        if (!file.exists()) return;
-        try (FileInputStream fis = new FileInputStream(FILE_NAME);
-             ObjectInputStream ois = new ObjectInputStream(fis)) {
+        if (!file.exists()) {
+            return;
+        }
+        try (FileInputStream fis = new FileInputStream(FILE_NAME); ObjectInputStream ois = new ObjectInputStream(fis)) {
             while (true) {
                 try {
-                    QuantityMeasurementEntity entity =
-                            (QuantityMeasurementEntity) ois.readObject();
+                    QuantityMeasurementEntity entity
+                            = (QuantityMeasurementEntity) ois.readObject();
                     quantityMeasurementEntityCache.add(entity);
                 } catch (EOFException e) {
                     break;
@@ -92,4 +102,3 @@ public class QuantityMeasurementCacheRepository implements IQuantityMeasurementR
         }
     }
 }
-

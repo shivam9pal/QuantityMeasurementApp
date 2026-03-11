@@ -6,8 +6,6 @@ import java.util.Objects;
 import com.core.IMeasurable;
 import com.dto.QuantityModel;
 
-
- 
 public class QuantityMeasurementEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -28,7 +26,11 @@ public class QuantityMeasurementEntity implements Serializable {
     public String resultString;  // "Equal" / "Not Equal" for comparison
 
     public boolean isError;
-    public String  errorMessage;
+    public String errorMessage;
+
+    // Public no-arg constructor for deserialization
+    public QuantityMeasurementEntity() {
+    }
 
     //private constructor ──────────────────────────────────────────────
     private QuantityMeasurementEntity(
@@ -36,14 +38,14 @@ public class QuantityMeasurementEntity implements Serializable {
             QuantityModel<IMeasurable> thatQuantity,
             String operation) {
 
-        this.thisValue           = thisQuantity.getValue();
-        this.thisUnit            = thisQuantity.getUnit().getUnitName();
+        this.thisValue = thisQuantity.getValue();
+        this.thisUnit = thisQuantity.getUnit().getUnitName();
         this.thisMeasurementType = thisQuantity.getUnit().getMeasurementType();
-        this.operation           = operation;
+        this.operation = operation;
 
         if (thatQuantity != null) {
-            this.thatValue           = thatQuantity.getValue();
-            this.thatUnit            = thatQuantity.getUnit().getUnitName();
+            this.thatValue = thatQuantity.getValue();
+            this.thatUnit = thatQuantity.getUnit().getUnitName();
             this.thatMeasurementType = thatQuantity.getUnit().getMeasurementType();
         }
     }
@@ -66,8 +68,8 @@ public class QuantityMeasurementEntity implements Serializable {
             QuantityModel<IMeasurable> result) {
         this(thisQuantity, thatQuantity, operation);
         if (result != null) {
-            this.resultValue           = result.getValue();
-            this.resultUnit            = result.getUnit().getUnitName();
+            this.resultValue = result.getValue();
+            this.resultUnit = result.getUnit().getUnitName();
             this.resultMeasurementType = result.getUnit().getMeasurementType();
         }
     }
@@ -81,13 +83,17 @@ public class QuantityMeasurementEntity implements Serializable {
             boolean isError) {
         this(thisQuantity, thatQuantity, operation);
         this.errorMessage = errorMessage;
-        this.isError      = isError;
+        this.isError = isError;
     }
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (!(obj instanceof QuantityMeasurementEntity)) return false;
+        if (this == obj) {
+            return true;
+        }
+        if (!(obj instanceof QuantityMeasurementEntity)) {
+            return false;
+        }
         QuantityMeasurementEntity other = (QuantityMeasurementEntity) obj;
         return Double.compare(thisValue, other.thisValue) == 0
                 && Double.compare(thatValue, other.thatValue) == 0
@@ -98,15 +104,16 @@ public class QuantityMeasurementEntity implements Serializable {
 
     @Override
     public String toString() {
-        if (isError)
+        if (isError) {
             return "[ERROR] " + operation + " | " + errorMessage;
-        if (resultString != null)
+        }
+        if (resultString != null) {
             return operation + " | " + thisValue + " " + thisUnit
                     + " vs " + thatValue + " " + thatUnit
                     + " → " + resultString;
+        }
         return operation + " | " + thisValue + " " + thisUnit
                 + " & " + thatValue + " " + thatUnit
                 + " = " + resultValue + " " + resultUnit;
     }
 }
-
