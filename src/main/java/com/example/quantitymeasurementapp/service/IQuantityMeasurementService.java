@@ -21,4 +21,5 @@ public interface IQuantityMeasurementService {
 
     List<QuantityMeasurementEntity> getAllMeasurements();
     List<QuantityMeasurementEntity> getMeasurementsByOperation(String operation);
+
 }

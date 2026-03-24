@@ -49,7 +49,7 @@ public class QuantityMeasurementServiceImpl implements IQuantityMeasurementServi
         if (dto == null)
             throw new QuantityMeasurementException("QuantityDTO cannot be null");
         IMeasurable unit = resolveUnit(dto.getMeasurementType(), dto.getUnit());
-        return new QuantityModel<IMeasurable>(dto.getValue(), unit);  // ✅ explicit type
+        return new QuantityModel<IMeasurable>(dto.getValue(), unit);
     }
 
     private QuantityDTO toDTO(QuantityModel<IMeasurable> model) {
