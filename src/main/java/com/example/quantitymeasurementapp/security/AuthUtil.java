@@ -46,6 +46,7 @@ public class AuthUtil {
      */
     public void validateToken(String token) {
         try {
+            System.out.println(token+"token");
             Jwts.parser()
                     .verifyWith(getSecretKey())
                     .build()

@@ -9,7 +9,7 @@ import com.example.quantitymeasurementapp.entity.QuantityMeasurementEntity;
 
 
 
-@Repository
+
 public interface IQuantityMeasurementRepository
         extends JpaRepository<QuantityMeasurementEntity, Long> {
 
