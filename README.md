@@ -30,6 +30,81 @@ Typical packages you’ll find under `src/main/java/com/example/quantitymeasurem
 
 ---
 
+## Microservices Structure
+
+This repository is organized as **three Spring Boot services** (microservice-style layout):
+
+1) **Service Registry (Eureka Server)**
+   - Path: `ServiceRegistry/`
+   - Port: `8761`
+   - Config: `ServiceRegistry/src/main/resources/application.yaml`
+
+2) **API Gateway (Spring Cloud Gateway)**
+   - Path: `ApiGateway/`
+   - Port: `9090`
+   - Config: `ApiGateway/src/main/resources/application.yaml`
+   - Routes:
+     - `/auth/**` → `lb://QUANTITY-SERVICE`
+     - `/api/**` → `lb://QUANTITY-SERVICE`
+     - Swagger paths (`/swagger-ui/**`, `/swagger-ui.html`, `/v3/api-docs/**`) → `lb://QUANTITY-SERVICE`
+
+3) **Quantity Service (Business Service)**
+   - Path: `QuantityMeasurementApp/`
+   - Port: `8081`
+   - Config: `QuantityMeasurementApp/src/main/resources/application.yml`
+   - Registers to Eureka as: `QUANTITY-SERVICE`
+
+### Startup order (local / server)
+
+1. Start **ServiceRegistry** (Eureka) on `8761`
+2. Start **QuantityMeasurementApp** on `8081` (registers into Eureka)
+3. Start **ApiGateway** on `9090` (routes traffic via Eureka using `lb://...`)
+
+---
+
+## CI/CD Structure (GitHub Actions)
+
+This repo includes a deployment workflow:
+
+- Workflow file: `.github/workflows/deploy.yml`
+- Trigger: **push to `main`**
+- Job: Connects to an EC2 instance via SSH and performs deployment steps.
+
+### What the deploy workflow does
+
+1) **SSH into EC2** using secrets:
+- `EC2_HOST`
+- `EC2_USER`
+- `EC2_SSH_KEY`
+
+2) **Pull latest code**
+- Goes to: `~/QMA-Micro`
+- Runs `git fetch origin`
+- Hard resets to `origin/main`
+- Cleans untracked files (`git clean -fd`)
+
+3) **Stops old running services**
+- Kills processes matching:
+  - `ServiceRegistry`
+  - `QuantityMeasurementApp`
+  - `ApiGateway`
+
+4) **Builds and starts all services (Maven wrapper)**
+- Ensures `mvnw` is executable
+- Removes old `target/` folders
+- Creates log directory `~/logs`
+- Builds and starts in this order:
+  1. `ServiceRegistry` → runs on **8761**, logs: `~/logs/service-registry.log`
+  2. `QuantityMeasurementApp` → runs on **8081**, logs: `~/logs/quantity-app.log`
+  3. `ApiGateway` → runs on **9090**, logs: `~/logs/api-gateway.log`
+
+5) **Verification output**
+- Prints running Java processes
+- Prints listening ports (`8761`, `8081`, `9090`)
+- Lists log files under `~/logs/`
+
+---
+
 ## Features
 
 ### Measurement / Quantity module
