@@ -1,0 +1,121 @@
+name: Deploy Microservices to EC2
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deploy to EC2 via SSH
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          port: 22
+          script: |
+            echo "Connected to EC2"
+            whoami
+            hostname
+            java -version
+
+            cd ~/QMA-Micro
+
+            echo "Updating code from main..."
+            git fetch origin
+            git reset --hard origin/main
+            git clean -fd
+
+            echo "================================"
+            echo "Stopping old Java services..."
+            echo "================================"
+
+            ps aux | grep ServiceRegistry | grep -v grep | awk '{print $2}' | xargs -r kill -9
+            ps aux | grep QuantityMeasurementApp | grep -v grep | awk '{print $2}' | xargs -r kill -9
+            ps aux | grep ApiGateway | grep -v grep | awk '{print $2}' | xargs -r kill -9
+
+            sleep 5
+
+            echo "Fixing mvnw permissions..."
+            find . -name "mvnw" -exec chmod +x {} \;
+
+            echo "Cleaning old builds..."
+            find . -name "target" -type d -exec rm -rf {} + 2>/dev/null || true
+
+            echo "Creating logs directory..."
+            mkdir -p ~/logs
+
+            echo "================================"
+            echo "Building and starting services..."
+            echo "================================"
+
+            # =========================
+            # ServiceRegistry (8761)
+            # =========================
+            echo ">>> Building ServiceRegistry..."
+            cd ServiceRegistry
+            ./mvnw clean package -DskipTests
+            if ls target/*.jar 1> /dev/null 2>&1; then
+              echo "Starting ServiceRegistry on port 8761..."
+              nohup java -jar target/*.jar --server.port=8761 > ~/logs/service-registry.log 2>&1 &
+              echo "ServiceRegistry PID: $!"
+            else
+              echo "ERROR: ServiceRegistry build failed!"
+              exit 1
+            fi
+            cd ..
+            sleep 10
+
+            # =========================
+            # QuantityMeasurementApp (8081)
+            # =========================
+            echo ">>> Building QuantityMeasurementApp..."
+            cd QuantityMeasurementApp
+            ./mvnw clean package -DskipTests
+            if ls target/*.jar 1> /dev/null 2>&1; then
+              echo "Starting QuantityMeasurementApp on port 8081..."
+              nohup java -jar target/*.jar --server.port=8081 > ~/logs/quantity-app.log 2>&1 &
+              echo "QuantityMeasurementApp PID: $!"
+            else
+              echo "ERROR: QuantityMeasurementApp build failed!"
+              exit 1
+            fi
+            cd ..
+            sleep 5
+
+            # =========================
+            # ApiGateway (9090) ✅ FIXED
+            # =========================
+            echo ">>> Building ApiGateway..."
+            cd ApiGateway
+            ./mvnw clean package -DskipTests
+            if ls target/*.jar 1> /dev/null 2>&1; then
+              echo "Starting ApiGateway on port 9090..."
+              nohup java -jar target/*.jar --server.port=9090 > ~/logs/api-gateway.log 2>&1 &
+              echo "ApiGateway PID: $!"
+            else
+              echo "ERROR: ApiGateway build failed!"
+              exit 1
+            fi
+            cd ..
+
+            sleep 5
+
+            echo "================================"
+            echo "✅ Deployment completed successfully!"
+            echo "================================"
+
+            echo "Running services:"
+            ps aux | grep java | grep -v grep
+
+            echo ""
+            echo "Listening ports:"
+            ss -tulnp | grep -E '8761|8081|9090'
+
+            echo ""
+            echo "Log files:"
+            ls -lh ~/logs/
